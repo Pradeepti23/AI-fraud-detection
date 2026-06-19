@@ -56,28 +56,32 @@ def get_all_transactions():
 # ==========================================================
 # LOAD MODELS (SAFE LOADING)
 # ==========================================================
+import traceback
 
 try:
-    print("RF exists:", os.path.exists("model/random_forest_fraud.pkl"))
+    print("RF exists:", os.path.exists("model/random_forest.pkl"))
 
-    if os.path.exists("model/random_forest_fraud.pkl"):
-        print("RF size:", os.path.getsize("model/random_forest_fraud.pkl"))
-        rf_model = joblib.load("model/random_forest_fraud.pkl")
+    if os.path.exists("model/random_forest.pkl"):
+        print("RF size:", os.path.getsize("model/random_forest.pkl"))
+
+        rf_model = joblib.load("model/random_forest.pkl")
         xgb_model = joblib.load("model/xgboost_fraud.pkl")
         scaler = joblib.load("model/scaler.pkl")
         encoders = joblib.load("model/label_encoders.pkl")
+
         model = rf_model
+
     else:
         model = None
         scaler = None
         encoders = {}
+
 except Exception as e:
     print("MODEL LOAD ERROR:")
     traceback.print_exc()
     model = None
     scaler = None
     encoders = {}
-
 # ==========================================================
 # EMAIL OTP
 # ==========================================================
