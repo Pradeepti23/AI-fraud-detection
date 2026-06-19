@@ -77,18 +77,22 @@ except Exception as e:
 # ==========================================================
 def send_otp_email(receiver_email, otp):
 
+    print("STEP 1: Function called")
+    print("Sending OTP to:", receiver_email)
+    print("OTP is:", otp)
+
     sender_email = "creditproject28@gmail.com"
     app_password = "wcli uyca wlln kelv"
 
     try:
-        print("Connecting SMTP...")
+        print("STEP 2: Connecting SMTP...")
 
         server = smtplib.SMTP("smtp.gmail.com", 587, timeout=15)
         server.ehlo()
         server.starttls()
         server.ehlo()
 
-        print("Logging in Gmail...")
+        print("STEP 3: Logging in...")
         server.login(sender_email, app_password)
 
         msg = MIMEText(f"Your OTP is: {otp}")
@@ -96,13 +100,14 @@ def send_otp_email(receiver_email, otp):
         msg["From"] = sender_email
         msg["To"] = receiver_email
 
+        print("STEP 4: Sending email...")
         server.sendmail(sender_email, receiver_email, msg.as_string())
-        server.quit()
 
-        print("OTP EMAIL SENT SUCCESSFULLY")
+        server.quit()
+        print("STEP 5: EMAIL SENT SUCCESSFULLY ✅")
 
     except Exception as e:
-        print("EMAIL FAILED:", e)
+        print("EMAIL FAILED ❌:", e)
 # ==========================================================
 # HOME
 # ==========================================================
@@ -228,11 +233,15 @@ def send_otp_email_async(receiver_email, otp):
         thread = threading.Thread(
             target=send_otp_email,
             args=(receiver_email, otp),
-            daemon=True   
+            daemon=True
         )
         thread.start()
+
+        print("OTP going to email:", receiver_email)
+
     except Exception as e:
         print("Async Email Error:", e)
+        
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -259,9 +268,7 @@ def login():
 
             session["otp"] = otp
             session["username"] = username
-            session["temp_email"] = user[2]
-
-            send_otp_email_async(session["temp_email"], otp)
+            send_otp_email_async(user[2], otp)
 
             return redirect(url_for("verify_otp"))
 
