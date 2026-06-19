@@ -81,9 +81,8 @@ def send_otp_email(receiver_email, otp):
     print("Sending OTP to:", receiver_email)
     print("OTP is:", otp)
 
-    sender_email = "creditproject28@gmail.com"
-    app_password = "wcli uyca wlln kelv"
-
+    sender_email = os.getenv("EMAIL_USER")
+    app_password = os.getenv("EMAIL_PASS")
     try:
         print("STEP 2: Connecting SMTP...")
 
@@ -228,19 +227,7 @@ def history():
 # ==========================================================
 # LOGIN / REGISTER / OTP (UNCHANGED)
 # ==========================================================
-def send_otp_email_async(receiver_email, otp):
-    try:
-        thread = threading.Thread(
-            target=send_otp_email,
-            args=(receiver_email, otp),
-            daemon=True
-        )
-        thread.start()
 
-        print("OTP going to email:", receiver_email)
-
-    except Exception as e:
-        print("Async Email Error:", e)
         
 
 @app.route("/login", methods=["GET", "POST"])
@@ -268,7 +255,7 @@ def login():
 
             session["otp"] = otp
             session["username"] = username
-            send_otp_email_async(user[2], otp)
+            send_otp_email(user[2], otp)
 
             return redirect(url_for("verify_otp"))
 
