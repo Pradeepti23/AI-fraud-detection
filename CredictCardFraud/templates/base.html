@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Credit Card Fraud Detection System</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="logo">
+            Fraud Detection AI
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/" class="nav-btn">Home</a>
+            <a href="/dashboard" class="nav-btn">Dashboard</a>
+            <a href="/predict" class="nav-btn">Predict</a>
+            <a href="/history" class="nav-btn">History</a>
+            <a href="/logout" class="nav-btn">Logout</a>
+
+        </div>
+
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</body>
+
+</html>

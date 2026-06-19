@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#12001f,#1a0b2e,#2a0a4a,#ff4ecd);
+        }
+
+        .otp-container{
+            width:400px;
+            background:rgba(255,255,255,0.1);
+            backdrop-filter:blur(15px);
+            border-radius:20px;
+            padding:40px;
+            text-align:center;
+            box-shadow:0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .otp-container h2{
+            color:white;
+            margin-bottom:20px;
+            font-size:28px;
+        }
+
+        .otp-container p{
+            color:#ddd;
+            margin-bottom:20px;
+        }
+
+        .otp-input{
+            width:100%;
+            padding:14px;
+            border:none;
+            outline:none;
+            border-radius:10px;
+            margin-bottom:20px;
+            font-size:18px;
+            text-align:center;
+        }
+
+        .btn{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            background:#ff4ecd;
+            color:white;
+            font-size:16px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+        }
+
+        .error{
+            color:#ffb3b3;
+            margin-top:15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="otp-container">
+        <h2>OTP Verification</h2>
+        <p>Enter the OTP sent to your registered email.</p>
+
+        <form method="POST">
+            <input type="text"
+                   name="otp"
+                   class="otp-input"
+                   placeholder="Enter OTP"
+                   required>
+
+            <button type="submit" class="btn">
+                Verify OTP
+            </button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

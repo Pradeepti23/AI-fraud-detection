@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* =========================
+BASE RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* =========================
+GLOBAL BODY (FIXED - ONLY ONCE)
+========================= */
+body {
+    background: linear-gradient(135deg, #5d4cf1, #ec93dc);
+    color: white;
+    min-height: 100vh;
+}
+
+/* =========================
+NAVBAR
+========================= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+}
+
+.logo {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 22px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: 0.25s ease;
+    background: linear-gradient(135deg, #4f46e5, #fa79d1);
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* =========================
+HOME PAGE
+========================= */
+.home-container {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.welcome {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin-top: 10px;
+    color: #ccc;
+    font-size: 17px;
+}
+
+.button-group {
+    margin-top: 25px;
+}
+
+.primary-btn,
+.secondary-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 10px;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #4f46e5, #fa79d1);
+    color: white;
+    padding: 16px 40px;   /* increases button size */
+    font-size: 20px;      /* larger text */
+    border-radius: 30px;
+
+}
+
+
+/* =========================
+INFO BOX
+========================= */
+.info-box {
+    margin: 40px auto;
+    max-width: 900px;
+    background: rgba(255,255,255,0.06);
+    padding: 25px;
+    border-radius: 15px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.info-box h3{
+    font-size: 40px;
+    color: white;
+    min-width: 180px;
+    margin-left: 10px;
+}
+
+.info-box ul{
+    list-style-type: disc;
+    padding-left: 25px;
+    margin: 0;
+
+}
+
+.info-box li{
+    color: white;
+    font-size: 28px;
+    text-align: left;
+    margin: 10px 0;
+    line-height: 1.5;
+    font-size: medium;
+}
+
+/* =========================
+DASHBOARD LAYOUT
+========================= */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f97ae4, #2e1d5c, #2a0a4a);
+    color: white;
+}
+
+/* WRAPPER */
+.dashboard-wrapper {
+    padding: 25px;
+}
+
+/* HEADER */
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.dashboard-header p {
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+/* KPI GRID */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.kpi-card {
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+}
+
+.kpi-card h2 {
+    font-size: 28px;
+    margin: 0;
+}
+
+.kpi-card p {
+    margin-top: 10px;
+    opacity: 0.7;
+}
+
+/* COLORS */
+.blue { border-left: 4px solid #3b82f6; }
+.red { border-left: 4px solid #ef4444; }
+.green { border-left: 4px solid #22c55e; }
+.purple { border-left: 4px solid #a855f7; }
+
+/* CHARTS */
+.chart-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.chart-box {
+    height: 320px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .chart-container {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================
+PREDICT FORM
+========================= */
+form {
+    max-width: 500px;
+    margin: auto;
+    background: rgba(218, 219, 230, 0.06),rgb(201, 201, 221);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    background: #1c1c2b;
+    color: white;
+}
+
+form button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff4ecd, #7c3aed);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+form button:hover {
+    transform: scale(1.05);
+}
+
+/* =========================
+RESULT BOX (PREDICT OUTPUT)
+========================= */
+.result-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-box .fraud {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.result-box .genuine {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #12001f, #1a0b2e, #2a0a4a);
+    color: white;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+.history-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px;
+}
+
+/* =========================
+   HEADER
+========================= */
+.dashboard-header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p {
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+/* =========================
+   TABLE CARD
+========================= */
+.table-card {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 15px;
+    overflow-x: auto;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* =========================
+   TABLE
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+/* HEADER ROW */
+table thead tr {
+    background: linear-gradient(135deg, #7c3aed, #ff4ecd);
+    color: white;
+}
+
+table th {
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* DATA ROWS */
+table td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+    color: #e5e5e5;
+}
+
+/* HOVER EFFECT */
+table tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge-fraud {
+    background: rgba(255, 77, 77, 0.15);
+    color: #ff4d4d;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.badge-genuine {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+    .dashboard-header h1 {
+        font-size: 22px;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}
+
+
+.page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.chart-box{
+    width: 60%;
+}
+
+.result {
+    width: 60%;
+    margin: 20px auto 0 auto;   /* 👈 pushes it BELOW form + centers it */
+    padding: 20px;
+    background: rgb(17, 7, 55);
+    border-radius: 12px;
+    text-align: center;         /* ✔ correct alignment */
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}

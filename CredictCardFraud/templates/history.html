@@ -1,0 +1,80 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ================= PAGE WRAPPER ================= -->
+<div class="history-wrapper">
+
+    <!-- ================= HEADER SECTION ================= -->
+    <div class="dashboard-header">
+        <h1>Transaction History</h1>
+        <p>View all fraud detection records stored in the database</p>
+    </div>
+
+    <!-- ================= TABLE CARD ================= -->
+    <div class="table-card">
+
+        <table>
+
+            <!-- TABLE HEADER -->
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Merchant</th>
+                    <th>Prediction</th>
+                    <th>Probability</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <!-- TABLE BODY -->
+            <tbody>
+
+                <!-- LOOP THROUGH DATABASE ROWS -->
+                {% for row in transactions %}
+
+                <tr>
+
+                    <!-- ID -->
+                    <td>{{ row["id"] }}</td>
+
+                    <!-- AMOUNT -->
+                    <td>₹{{ row["amount"] }}</td>
+
+                    <!-- TRANSACTION TYPE -->
+                    <td>{{ row["transaction_type"] }}</td>
+
+                    <!-- MERCHANT CATEGORY -->
+                    <td>{{ row["merchant_category"] }}</td>
+
+                    <!-- PREDICTION RESULT -->
+                    <td>
+                        {% if row["result"] == "Fraud" %}
+                            <span class="badge-fraud">Fraud</span>
+                        {% else %}
+                            <span class="badge-genuine">Genuine</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- PROBABILITY -->
+                    <td>{{ row["probability"] }}%</td>
+
+                    <!-- DATE (AUTO TIMESTAMP) -->
+                    <td>{{ row["date"] }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

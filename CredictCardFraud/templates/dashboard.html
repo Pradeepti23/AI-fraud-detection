@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-wrapper">
+
+    <!-- HEADER -->
+    <div class="dashboard-header">
+        <h1>Fraud Detection Dashboard</h1>
+        <p>Real-time analytics of transactions</p>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+
+        <div class="kpi-card blue">
+            <h2>{{ total_transactions }}</h2>
+            <p>Total Transactions</p>
+        </div>
+
+        <div class="kpi-card red">
+            <h2>{{ fraud_count }}</h2>
+            <p>Fraud Transactions</p>
+        </div>
+
+        <div class="kpi-card green">
+            <h2>{{ genuine_count }}</h2>
+            <p>Genuine Transactions</p>
+        </div>
+
+        <div class="kpi-card purple">
+            <h2>{{ detection_rate }}%</h2>
+            <p>Fraud Detection Rate</p>
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+    <div class="chart-container">
+
+        <div class="chart-box">
+            <canvas id="fraudChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <canvas id="barChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PASS DATA TO JS -->
+<script>
+    const fraud = Number("{{ fraud_count | default(0) }}".replace(/,/g, ""));
+    const genuine = Number("{{ genuine_count | default(0) }}".replace(/,/g, ""));
+</script>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
+{% endblock %}

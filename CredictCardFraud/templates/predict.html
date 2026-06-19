@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="welcome">Fraud Prediction</h1>
+<p class="subtitle">Enter transaction details to analyze fraud risk using Machine Learning.</p>
+
+<div class="page">
+
+    <!-- FORM -->
+    <div class="chart-box">
+        <form method="POST">
+
+            <label>Transaction Amount</label>
+            <input type="number" name="transaction_amount" required>
+
+            <label>Transaction Type</label>
+            <select name="transaction_type">
+                <option>Online</option>
+                <option>ATM</option>
+                <option>POS</option>
+            </select>
+
+            <label>Merchant Category</label>
+            <select name="merchant_category">
+                <option>Shopping</option>
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Electronics</option>
+                <option>Healthcare</option>
+            </select>
+
+            <label>Transaction Time</label>
+            <select name="transaction_time">
+                <option>Morning</option>
+                <option>Afternoon</option>
+                <option>Evening</option>
+                <option>Night</option>
+            </select>
+
+            <label>Customer Age</label>
+            <input type="number" name="customer_age">
+
+            <label>Previous Fraud History</label>
+            <select name="previous_fraud_history">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+
+            <label>New Device Used</label>
+            <select name="new_device_used">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+
+            <label>International Transaction</label>
+            <select name="international_transaction">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+
+            <label>Location Match</label>
+            <select name="location_match">
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+
+            <label>Transactions Today</label>
+            <input type="number" name="transactions_today">
+
+            <button type="submit">Predict Fraud</button>
+
+        </form>
+    </div>
+
+    <!-- RESULT -->
+    {% if prediction %}
+    <div class="result">
+        <h2>Prediction Result</h2>
+        <h1>{{ prediction }}</h1>
+        <h3>Fraud Probability: {{ probability }}%</h3>
+        <p>Risk Score: {{ risk_score }}</p>
+    </div>
+    {% endif %}
+
+    <!-- ERROR -->
+    {% if error %}
+    <div class="error">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
