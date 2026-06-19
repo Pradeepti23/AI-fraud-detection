@@ -226,8 +226,8 @@ def login():
 
     if request.method == "POST":
 
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -262,7 +262,7 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form["username"]
+        username = request.form.get["username"]
         email = request.form["email"]
         password = request.form["password"]
 
