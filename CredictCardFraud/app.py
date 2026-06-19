@@ -75,26 +75,34 @@ except Exception as e:
 # ==========================================================
 # EMAIL OTP
 # ==========================================================
-
 def send_otp_email(receiver_email, otp):
 
     sender_email = "creditproject28@gmail.com"
     app_password = "wcli uyca wlln kelv"
 
-    msg = MIMEText(f"Your OTP is: {otp}")
-    msg["Subject"] = "OTP Verification"
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
-
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        print("Connecting SMTP...")
+
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=15)
+        server.ehlo()
         server.starttls()
+        server.ehlo()
+
+        print("Logging in Gmail...")
         server.login(sender_email, app_password)
+
+        msg = MIMEText(f"Your OTP is: {otp}")
+        msg["Subject"] = "OTP Verification"
+        msg["From"] = sender_email
+        msg["To"] = receiver_email
+
         server.sendmail(sender_email, receiver_email, msg.as_string())
         server.quit()
-    except Exception as e:
-        print("Email Error:", e)
 
+        print("OTP EMAIL SENT SUCCESSFULLY")
+
+    except Exception as e:
+        print("EMAIL FAILED:", e)
 # ==========================================================
 # HOME
 # ==========================================================
@@ -219,7 +227,8 @@ def send_otp_email_async(receiver_email, otp):
     try:
         thread = threading.Thread(
             target=send_otp_email,
-            args=(receiver_email, otp)
+            args=(receiver_email, otp),
+            daemon=True   
         )
         thread.start()
     except Exception as e:
