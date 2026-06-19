@@ -16,6 +16,9 @@ from database import (
     create_transactions_table,
     create_user_table
 )
+import threading
+import os
+
 
 # ==========================================================
 # INIT DB
@@ -212,6 +215,15 @@ def history():
 # ==========================================================
 # LOGIN / REGISTER / OTP (UNCHANGED)
 # ==========================================================
+def send_otp_email_async(receiver_email, otp):
+    try:
+        thread = threading.Thread(
+            target=send_otp_email,
+            args=(receiver_email, otp)
+        )
+        thread.start()
+    except Exception as e:
+        print("Async Email Error:", e)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -240,7 +252,7 @@ def login():
             session["username"] = username
             session["temp_email"] = user[2]
 
-            send_otp_email(user[2], otp)
+            send_otp_email_async(session["temp_email"], otp)
 
             return redirect(url_for("verify_otp"))
 
