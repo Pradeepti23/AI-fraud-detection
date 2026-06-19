@@ -18,6 +18,7 @@ from database import (
 )
 import threading
 import os
+import traceback
 
 
 # ==========================================================
@@ -57,15 +58,20 @@ def get_all_transactions():
 # ==========================================================
 
 try:
-    rf_model = joblib.load("model/random_forest_fraud.pkl")
-    xgb_model = joblib.load("model/xgboost_fraud.pkl")
-    scaler = joblib.load("model/scaler.pkl")
-    encoders = joblib.load("model/label_encoders.pkl")
+    print("RF exists:", os.path.exists("model/random_forest_fraud.pkl"))
 
-    model = rf_model
-
+    if os.path.exists("model/random_forest_fraud.pkl"):
+        print("RF size:", os.path.getsize("model/random_forest_fraud.pkl"))
+        rf_model = joblib.load("model/random_forest_fraud.pkl")
+        xgb_model = joblib.load("model/xgboost_fraud.pkl")
+        scaler = joblib.load("model/scaler.pkl")
+        encoders = joblib.load("model/label_encoders.pkl")
+        model = rf_model
+    else:
+        model = None
+        scaler = None
+        encoders = {}
 except Exception as e:
-    import traceback
     print("MODEL LOAD ERROR:")
     traceback.print_exc()
     model = None
@@ -81,9 +87,11 @@ def send_otp_email(receiver_email, otp):
     print("Sending OTP to:", receiver_email)
     print("OTP is:", otp)
 
-    sender_email = os.getenv("EMAIL_USER")
-    app_password = os.getenv("EMAIL_PASS")
+    
     try:
+
+        sender_email = os.getenv("EMAIL_USER")
+        app_password = os.getenv("EMAIL_PASS")
         print("STEP 2: Connecting SMTP...")
 
         server = smtplib.SMTP("smtp.gmail.com", 587, timeout=15)
@@ -227,7 +235,19 @@ def history():
 # ==========================================================
 # LOGIN / REGISTER / OTP (UNCHANGED)
 # ==========================================================
+def send_otp_email_async(receiver_email, otp):
+    try:
+        thread = threading.Thread(
+            target=send_otp_email,
+            args=(receiver_email, otp),
+            daemon=True
+        )
+        thread.start()
 
+        print("OTP going to email:", receiver_email)
+
+    except Exception as e:
+        print("Async Email Error:", e)
         
 
 @app.route("/login", methods=["GET", "POST"])
