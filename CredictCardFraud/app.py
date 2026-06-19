@@ -62,7 +62,9 @@ try:
     model = rf_model
 
 except Exception as e:
-    print("MODEL LOAD ERROR:", e)
+    import traceback
+    print("MODEL LOAD ERROR:")
+    traceback.print_exc()
     model = None
     scaler = None
     encoders = {}
