@@ -16,11 +16,12 @@ from database import (
     create_transactions_table,
     create_user_table
 )
-import threading
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
-import traceback
-
-
+os.environ["EMAIL_USER"] = "creditproject28@gmail.com"
+os.environ["EMAIL_PASS"] = "wcli uyca wlln kelv"
 # ==========================================================
 # INIT DB
 # ==========================================================
@@ -56,69 +57,48 @@ def get_all_transactions():
 # ==========================================================
 # LOAD MODELS (SAFE LOADING)
 # ==========================================================
-import traceback
-
 try:
-    print("RF exists:", os.path.exists("model/random_forest.pkl"))
+    rf_model = joblib.load("model/random_forest.pkl")
+    xgb_model = joblib.load("model/xgboost_fraud.pkl")
+    scaler = joblib.load("model/scaler.pkl")
+    encoders = joblib.load("model/label_encoders.pkl")
 
-    if os.path.exists("model/random_forest.pkl"):
-        print("RF size:", os.path.getsize("model/random_forest.pkl"))
-
-        rf_model = joblib.load("model/random_forest.pkl")
-        xgb_model = joblib.load("model/xgboost_fraud.pkl")
-        scaler = joblib.load("model/scaler.pkl")
-        encoders = joblib.load("model/label_encoders.pkl")
-
-        model = rf_model
-
-    else:
-        model = None
-        scaler = None
-        encoders = {}
+    model = rf_model
 
 except Exception as e:
+    import traceback
     print("MODEL LOAD ERROR:")
     traceback.print_exc()
     model = None
     scaler = None
     encoders = {}
+
 # ==========================================================
 # EMAIL OTP
 # ==========================================================
+
 def send_otp_email(receiver_email, otp):
 
-    print("STEP 1: Function called")
-    print("Sending OTP to:", receiver_email)
-    print("OTP is:", otp)
+    sender_email = os.environ.get("EMAIL_USER")
+    app_password = os.environ.get("EMAIL_PASS")
 
-    
+    msg = MIMEText(f"Your OTP is: {otp}")
+    msg["Subject"] = "OTP Verification"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+
     try:
-
-        sender_email = os.getenv("EMAIL_USER")
-        app_password = os.getenv("EMAIL_PASS")
-        print("STEP 2: Connecting SMTP...")
-
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=15)
-        server.ehlo()
+        server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.ehlo()
-
-        print("STEP 3: Logging in...")
         server.login(sender_email, app_password)
-
-        msg = MIMEText(f"Your OTP is: {otp}")
-        msg["Subject"] = "OTP Verification"
-        msg["From"] = sender_email
-        msg["To"] = receiver_email
-
-        print("STEP 4: Sending email...")
         server.sendmail(sender_email, receiver_email, msg.as_string())
 
+       
         server.quit()
-        print("STEP 5: EMAIL SENT SUCCESSFULLY ✅")
 
     except Exception as e:
-        print("EMAIL FAILED ❌:", e)
+        print("Email Error:", e)
+
 # ==========================================================
 # HOME
 # ==========================================================
@@ -239,20 +219,7 @@ def history():
 # ==========================================================
 # LOGIN / REGISTER / OTP (UNCHANGED)
 # ==========================================================
-def send_otp_email_async(receiver_email, otp):
-    try:
-        thread = threading.Thread(
-            target=send_otp_email,
-            args=(receiver_email, otp),
-            daemon=True
-        )
-        thread.start()
 
-        print("OTP going to email:", receiver_email)
-
-    except Exception as e:
-        print("Async Email Error:", e)
-        
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -279,6 +246,8 @@ def login():
 
             session["otp"] = otp
             session["username"] = username
+            session["temp_email"] = user[2]
+
             send_otp_email(user[2], otp)
 
             return redirect(url_for("verify_otp"))
