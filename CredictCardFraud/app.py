@@ -87,30 +87,26 @@ except Exception as e:
 # ==========================================================
 import requests
 
+def send_otp_email_async(email, otp):
+    threading.Thread(target=send_otp_email, args=(email, otp)).start()
+
 def send_otp_email(receiver_email, otp):
+    sender_email = os.environ.get("EMAIL_USER")
+    app_password = os.environ.get("EMAIL_PASS")
 
-    api_key = os.environ.get("RESEND_API_KEY")
-
-    if not api_key:
-        print("RESEND API KEY NOT FOUND")
-        return
+    msg = MIMEText(f"Your OTP is: {otp}")
+    msg["Subject"] = "OTP Verification"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
 
     try:
-        response = requests.post(
-            "https://api.resend.com/emails",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "from": "onboarding@resend.dev",
-                "to": receiver_email,
-                "subject": "OTP Verification",
-                "text": f"Your OTP is: {otp}"
-            }
-        )
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(sender_email, app_password)
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+        server.quit()
 
-        print("EMAIL RESPONSE:", response.text)
+        print("OTP EMAIL SENT SUCCESSFULLY")
 
     except Exception as e:
         print("Email Error:", e)
@@ -271,8 +267,7 @@ def login():
             session["otp"] = otp
             session["username"] = username
             session["temp_email"] = user[2]
-
-            send_otp_email(user[2], otp)
+            send_otp_email_async(user[2], otp)
 
             return redirect(url_for("verify_otp"))
 
