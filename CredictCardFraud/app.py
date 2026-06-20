@@ -23,6 +23,8 @@ load_dotenv()
 import os
 os.environ["EMAIL_USER"] = "creditproject28@gmail.com"
 os.environ["EMAIL_PASS"] = "wcli uyca wlln kelv"
+EMAIL_USER = os.environ.get("EMAIL_USER")
+EMAIL_PASS = os.environ.get("EMAIL_PASS")
 # ==========================================================
 # INIT DB
 # ==========================================================
@@ -85,37 +87,28 @@ except Exception as e:
 # ==========================================================
 # EMAIL OTP
 # ==========================================================
-import requests
-def send_otp_email(receiver_email, otp):
-    sender_email = os.environ.get("EMAIL_USER")
-    app_password = os.environ.get("EMAIL_PASS")
+import traceback
 
-    print("SENDING OTP TO:", receiver_email)
-    print("FROM:", sender_email)
+def send_otp_email_async(to_email, otp):
+    def send():
+        try:
+            msg = MIMEText(f"Your OTP is: {otp}")
+            msg["Subject"] = "Your OTP Code"
+            msg["From"] = EMAIL_USER
+            msg["To"] = to_email
 
-    msg = MIMEText(f"Your OTP is: {otp}")
-    msg["Subject"] = "OTP Verification"
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.starttls()
+            server.login(EMAIL_USER, EMAIL_PASS)
+            server.sendmail(EMAIL_USER, to_email, msg.as_string())
+            server.quit()
+            print("✅ OTP email sent successfully")
 
-    try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.set_debuglevel(1)  # 🔥 VERY IMPORTANT
-        server.starttls()
-        server.login(sender_email, app_password)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
-        server.quit()
+        except Exception:
+            print("❌ OTP EMAIL ERROR:")
+            print(traceback.format_exc())
 
-        print("✅ OTP EMAIL SENT SUCCESSFULLY")
-
-    except Exception as e:
-        print("❌ EMAIL ERROR:", e)
-
-
-def send_otp_email_async(receiver_email, otp):
-    thread = threading.Thread(target=send_otp_email, args=(receiver_email, otp))
-    thread.daemon = True
-    thread.start()
+    threading.Thread(target=send).start()
 
 # ==========================================================
 # HOME
