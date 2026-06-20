@@ -57,19 +57,23 @@ def get_all_transactions():
 # ==========================================================
 # LOAD MODELS (SAFE LOADING)
 # ==========================================================
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+rf_model = joblib.load(os.path.join(BASE_DIR, "model", "random_forest.pkl"))
+xgb_model = joblib.load(os.path.join(BASE_DIR, "model", "xgboost_fraud.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "model", "scaler.pkl"))
+encoders = joblib.load(os.path.join(BASE_DIR, "model", "label_encoders.pkl"))
+
 try:
-    rf_model = joblib.load("model/random_forest.pkl")
-    xgb_model = joblib.load("model/xgboost_fraud.pkl")
-    scaler = joblib.load("model/scaler.pkl")
-    encoders = joblib.load("model/label_encoders.pkl")
-
-    model = rf_model
-
+    rf_model = joblib.load(os.path.join(BASE_DIR, "model", "random_forest.pkl"))
+    xgb_model = joblib.load(os.path.join(BASE_DIR, "model", "xgboost_fraud.pkl"))
+    scaler = joblib.load(os.path.join(BASE_DIR, "model", "scaler.pkl"))
+    encoders = joblib.load(os.path.join(BASE_DIR, "model", "label_encoders.pkl"))
 except Exception as e:
-    import traceback
-    print("MODEL LOAD ERROR:")
-    traceback.print_exc()
-    model = None
+    print("MODEL LOAD ERROR:", e)
+    rf_model = None
     scaler = None
     encoders = {}
 
@@ -140,6 +144,9 @@ def predict():
 
     if request.method == "POST":
 
+        if (rf_model is None and xgb_model is None) or scaler is None:
+            return render_template("predict.html", error="Model not loaded properly")
+
         try:
             import pandas as pd
 
@@ -178,8 +185,13 @@ def predict():
 
             scaled = scaler.transform(data)
 
-            prediction = model.predict(scaled)[0]
-            probability = round(model.predict_proba(scaled)[0][1] * 100, 2)
+            # use available model (random forest preferred)
+            active_model = rf_model if rf_model is not None else xgb_model
+            if active_model is None:
+                raise Exception("No model available for prediction")
+
+            prediction = active_model.predict(scaled)[0]
+            probability = round(active_model.predict_proba(scaled)[0][1] * 100, 2)
 
             result = "Fraud" if prediction == 1 else "Genuine"
 
@@ -226,8 +238,8 @@ def login():
 
     if request.method == "POST":
 
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form["username"]
+        password = request.form["password"]
 
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -262,9 +274,9 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
 
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
