@@ -8,6 +8,7 @@ import joblib
 import random
 import numpy as np
 import smtplib
+import threading
 from email.mime.text import MIMEText
 
 from database import (
@@ -57,6 +58,7 @@ def get_all_transactions():
 # ==========================================================
 # LOAD MODELS (SAFE LOADING)
 # ==========================================================
+
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -71,9 +73,12 @@ try:
     xgb_model = joblib.load(os.path.join(BASE_DIR, "model", "xgboost_fraud.pkl"))
     scaler = joblib.load(os.path.join(BASE_DIR, "model", "scaler.pkl"))
     encoders = joblib.load(os.path.join(BASE_DIR, "model", "label_encoders.pkl"))
+
 except Exception as e:
-    print("MODEL LOAD ERROR:", e)
+    print("MODEL LOAD ERROR:")
+    print(e)
     rf_model = None
+    xgb_model = None
     scaler = None
     encoders = {}
 
@@ -82,7 +87,6 @@ except Exception as e:
 # ==========================================================
 
 def send_otp_email(receiver_email, otp):
-
     sender_email = os.environ.get("EMAIL_USER")
     app_password = os.environ.get("EMAIL_PASS")
 
@@ -92,16 +96,17 @@ def send_otp_email(receiver_email, otp):
     msg["To"] = receiver_email
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=10)
         server.starttls()
         server.login(sender_email, app_password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
-
-       
         server.quit()
-
     except Exception as e:
         print("Email Error:", e)
+
+
+def send_otp_email_async(email, otp):
+    threading.Thread(target=send_otp_email, args=(email, otp)).start()
 
 # ==========================================================
 # HOME
