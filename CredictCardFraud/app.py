@@ -86,13 +86,12 @@ except Exception as e:
 # EMAIL OTP
 # ==========================================================
 import requests
-
-def send_otp_email_async(email, otp):
-    threading.Thread(target=send_otp_email, args=(email, otp)).start()
-
 def send_otp_email(receiver_email, otp):
     sender_email = os.environ.get("EMAIL_USER")
     app_password = os.environ.get("EMAIL_PASS")
+
+    print("SENDING OTP TO:", receiver_email)
+    print("FROM:", sender_email)
 
     msg = MIMEText(f"Your OTP is: {otp}")
     msg["Subject"] = "OTP Verification"
@@ -101,15 +100,22 @@ def send_otp_email(receiver_email, otp):
 
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.set_debuglevel(1)  # 🔥 VERY IMPORTANT
         server.starttls()
         server.login(sender_email, app_password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
         server.quit()
 
-        print("OTP EMAIL SENT SUCCESSFULLY")
+        print("✅ OTP EMAIL SENT SUCCESSFULLY")
 
     except Exception as e:
-        print("Email Error:", e)
+        print("❌ EMAIL ERROR:", e)
+
+
+def send_otp_email_async(receiver_email, otp):
+    thread = threading.Thread(target=send_otp_email, args=(receiver_email, otp))
+    thread.daemon = True
+    thread.start()
 
 # ==========================================================
 # HOME
