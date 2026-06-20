@@ -248,6 +248,8 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
+        print("LOGIN ATTEMPT:", username)
+
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
@@ -259,18 +261,34 @@ def login():
         user = cursor.fetchone()
         conn.close()
 
-        if user:
+        # ❌ Invalid login
+        if not user:
+            print("LOGIN FAILED: Invalid credentials")
+            return render_template("login.html", error="Invalid credentials")
 
-            otp = str(random.randint(100000, 999999))
+        # ✅ LOGIN SUCCESS
+        print("LOGIN SUCCESS")
 
-            session["otp"] = otp
-            session["username"] = username
-            session["temp_email"] = user[2]
-            send_otp_email_async(user[2], otp)
+        otp = str(random.randint(100000, 999999))
+        print("GENERATED OTP:", otp)
 
-            return redirect(url_for("verify_otp"))
+        session["otp"] = otp
+        session["username"] = username
+        session["temp_email"] = user[2]
 
-        return render_template("login.html", error="Invalid credentials")
+        print("SENDING OTP TO:", user[2])
+
+        try:
+            # ⚠️ IMPORTANT: call directly (NO threading)
+            send_otp_email(user[2], otp)
+            print("OTP FUNCTION CALLED SUCCESSFULLY")
+
+        except Exception as e:
+            print("OTP SEND ERROR:", e)
+
+        return redirect(url_for("verify_otp"))
+
+
 
     return render_template("login.html")
 
