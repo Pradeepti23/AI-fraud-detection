@@ -97,8 +97,7 @@ def send_otp_email_async(to_email, otp):
             msg["From"] = EMAIL_USER
             msg["To"] = to_email
 
-            server = smtplib.SMTP("smtp.gmail.com", 587)
-            server.starttls()
+            server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
             server.login(EMAIL_USER, EMAIL_PASS)
             server.sendmail(EMAIL_USER, to_email, msg.as_string())
             server.quit()
