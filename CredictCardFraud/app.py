@@ -89,7 +89,7 @@ except Exception as e:
 # ==========================================================
 import traceback
 
-def send_otp_email_async(to_email, otp):
+def send_otp_email(to_email, otp):
     def send():
         try:
             msg = MIMEText(f"Your OTP is: {otp}")
