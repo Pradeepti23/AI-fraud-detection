@@ -14,9 +14,16 @@ BASE RESET
 GLOBAL BODY (FIXED - ONLY ONCE)
 ========================= */
 body {
-    background: linear-gradient(135deg, #5d4cf1, #ec93dc);
+    
     color: white;
     min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        #0e49d1,
+        #1c195c,
+        #360c7e
+    );
+
 }
 
 /* =========================
